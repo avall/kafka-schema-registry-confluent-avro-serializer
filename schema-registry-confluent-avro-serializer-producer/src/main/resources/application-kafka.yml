@@ -1,0 +1,53 @@
+server.port: 9009
+spring:
+  application:
+    name: producer
+  cloud:
+    stream:
+      function.definition: supplier;attachment;
+      bindings:
+        supplier-out-0:
+          destination: sensor-topic
+          group: group-sensor-topic
+          producer:
+            useNativeEncoding: true
+
+        attachment-out-0:
+          destination: attachment-topic
+          group: group-attachment-topic
+          producer:
+            useNativeEncoding: true
+
+      kafka:
+        binder:
+          brokers: localhost:9094
+          consumer-properties:
+            #            key.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+            value.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+            schema.registry.url: http://localhost:8081
+            specific.avro.reader: true
+          producer-properties:
+            #            key.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+            value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+            schema.registry.url: http://localhost:8081
+          # https://docs.confluent.io/platform/current/installation/configuration/producer-configs.html
+          # https://kafka.apache.org/documentation/#producerconfigs
+#        binder:
+#          producerProperties:
+#            value:
+#              subject:
+#                name:
+#                  strategy: io.confluent.kafka.serializers.subject.RecordNameStrategy
+
+        bindings:
+          supplier-out-0:
+            producer:
+              configuration:
+                value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+                schema.registry.url: http://localhost:8081
+          attachment-out-0:
+            producer:
+              configuration:
+                value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+                schema.registry.url: http://localhost:8081
+

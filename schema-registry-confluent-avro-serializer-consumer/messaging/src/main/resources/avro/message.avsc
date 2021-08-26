@@ -1,0 +1,75 @@
+{
+  "type": "record",
+  "name": "CommandCreateAttachments",
+  "namespace": "com.wefox.comms.ms.crm.attachments.messaging",
+  "fields": [
+    {
+      "name": "documents",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "namespace": "com.wefox.comms.ms.crm.attachments.messaging",
+          "name": "CommandCreateAttachment",
+          "fields": [
+            {
+              "name": "parentId",
+              "type": "string"
+            },
+            {
+              "name": "parentObjectName",
+              "type": "string"
+            },
+            {
+              "name": "contentType",
+              "type": "string"
+            },
+            {
+              "name": "path",
+              "type": "string"
+            },
+            {
+              "name": "fileName",
+              "type": "string"
+            },
+            {
+              "name": "description",
+              "type": ["null","string"],
+              "default": null
+            },
+            {
+              "name": "type",
+              "type": ["null","string"],
+              "default": null
+            },
+            {
+              "name": "docType",
+              "type": ["null","string"],
+              "default": null
+            },
+            {
+              "name": "country",
+              "type": ["null","string"],
+              "default": null
+            },
+            {
+              "name": "language",
+              "type": ["null","string"],
+              "default": null
+            },
+            {
+              "name": "isDocument",
+              "type": ["null","boolean"],
+              "default": null
+            },
+            {
+              "name": "isPrivate",
+              "type": ["null","boolean"],
+              "default": null
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

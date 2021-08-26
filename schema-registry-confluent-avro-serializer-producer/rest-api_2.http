@@ -1,0 +1,12 @@
+#Switzerland.
+POST http://localhost:9009/messages
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json; charset=utf-8
+
+###
+#Switzerland.
+POST http://localhost:9009/attachments
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json; charset=utf-8
