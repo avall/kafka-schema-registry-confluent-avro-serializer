@@ -4,7 +4,7 @@
 
     <groupId>org.springframework.boot.sample.producer</groupId>
     <artifactId>schema-registry-confluent-avro-serializer-producer</artifactId>
-    <version>${messaging.version}</version>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>schema-registry-confluent-avro-serializer-producer</name>
     <description>Schema Registry Producer1</description>
@@ -38,7 +38,7 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot.sample.consumer</groupId>
-            <artifactId>messaging</artifactId>
+            <artifactId>schema</artifactId>
             <version>${messaging.version}</version>
         </dependency>
 
