@@ -6,7 +6,7 @@
     <groupId>org.springframework.boot.sample.consumer</groupId>
     <artifactId>schema-registry-confluent-avro-serializer-consumer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath/>
+    <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -63,35 +63,6 @@
     <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
     <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
     <plugins>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-<!--        <configuration>-->
-<!--          <fork>true</fork>-->
-<!--          <skip>false</skip>-->
-<!--          &lt;!&ndash; /Users/avall/workspace_uberforce/java/UF_Financial_Middleware/finAppMiddleware-web/src/main/java/com/uberforce/financeapp/middleware/boot/com.uberforce.financeapp.middleware.boot. &ndash;&gt;-->
-<!--          <mainClass>-->
-<!--            sample.consumer.ConfluentAvroConsumerApplication-->
-<!--          </mainClass>-->
-<!--          <layout>ZIP</layout>-->
-<!--          <jvmArguments>-->
-<!--            -Xmx2048m-->
-<!--            -Xms512m-->
-<!--            -Xdebug-->
-<!--            -Xrunjdwp:transport=dt_socket,address=5005,server=y,suspend=n-->
-<!--          </jvmArguments>-->
-<!--        </configuration>-->
-<!--        <executions>-->
-<!--          <execution>-->
-<!--            <goals>-->
-<!--              <goal>repackage</goal>-->
-<!--            </goals>-->
-<!--            <configuration>-->
-<!--              <classifier>exec</classifier>-->
-<!--            </configuration>-->
-<!--          </execution>-->
-<!--        </executions>-->
-      </plugin>
       <plugin>
         <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-maven-plugin</artifactId>
@@ -187,6 +158,21 @@
       </plugin>
 
 
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <fork>true</fork>
+          <skip>false</skip>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
     </plugins>
   </build>

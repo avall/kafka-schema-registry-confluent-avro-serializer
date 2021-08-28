@@ -6,7 +6,7 @@
     <groupId>org.springframework.boot.sample.consumer</groupId>
     <artifactId>schema-registry-confluent-avro-serializer-consumer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath/>
+    <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -22,6 +22,11 @@
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-stream-binder-kafka</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-schema-registry-client</artifactId>
+      <version>${confluent.version}</version>
     </dependency>
 
     <dependency>
