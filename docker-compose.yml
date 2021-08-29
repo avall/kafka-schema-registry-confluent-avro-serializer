@@ -1,20 +1,139 @@
-version: '3'
+version: '3.8'
 services:
-  kafka:
-    image: wurstmeister/kafka
-    container_name: kafka-schema-registry
+
+  nexus:
+    container_name: kafka-schema-registry-avro-serializer-nexus
+    build:
+      context: .
+      dockerfile: Dockerfile_nexus
+    #    image: sonatype/nexus3
     ports:
-      - "9092:9092"
-    environment:
-      - KAFKA_ADVERTISED_HOST_NAME=127.0.0.1
-      - KAFKA_ADVERTISED_PORT=9092
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:29092
-    depends_on:
-      - zookeeper
+      - "8081:8081"
+    command: >
+        bash -c "/wait-for-it.sh --timeout=0 zookeeper:2181 && /wait-for-it.sh --timeout=0 broker:9092 && /wait-for-it.sh --timeout=0 control-center:9021 && /wait-for-it.sh --timeout=0 schema-registry:8084 && /opt/sonatype/start-nexus-repository-manager.sh"
+  #      bash -c "/opt/sonatype/start-nexus-repository-manager.sh"
+
   zookeeper:
-    image: wurstmeister/zookeeper
+    container_name: kafka-schema-registry-avro-serializer-zookeeper
+    image: confluentinc/cp-zookeeper:5.5.1
+    hostname: zookeeper
     ports:
       - "2181:2181"
     environment:
-      - KAFKA_ADVERTISED_HOST_NAME=zookeeper
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+
+#  zoonavigator:
+#    container_name: kafka-schema-registry-avro-serializer-zoonavigator
+#    image: elkozmon/zoonavigator:1.1.0
+#    ports:
+#      - "8010:8010"
+#    environment:
+#      HTTP_PORT: 8010
+#      AUTO_CONNECT_CONNECTION_STRING: zookeeper:2181
+#    depends_on:
+#      - zookeeper
+
+  broker:
+    container_name: kafka-schema-registry-avro-serializer-broker
+    image: confluentinc/cp-server:5.5.1
+    hostname: broker
+    depends_on:
+      - zookeeper
+    ports:
+      - "9094:9094"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092,PLAINTEXT_HOST://localhost:9094
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker:9092
+      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: "true"
+      CONFLUENT_SUPPORT_CUSTOMER_ID: "anonymous"
+  #      KAFKA_JMX_PORT: 9999
+  #      KAFKA_JMX_HOSTNAME: 127.0.0.1
+
+  control-center:
+    container_name: kafka-schema-registry-avro-serializer-control-center
+    image: confluentinc/cp-enterprise-control-center:5.5.1
+    hostname: control-center
+    depends_on:
+      - zookeeper
+      - broker
+      - schema-registry
+    #      - connect
+    #      - ksqldb
+    ports:
+      - "9021:9021"
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:9092'
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      #      CONTROL_CENTER_CONNECT_CLUSTER: 'connect:8083'
+      #      CONTROL_CENTER_KSQL_KSQLDB1_URL: "http://ksqldb:8088"
+      #      CONTROL_CENTER_KSQL_KSQLDB1_ADVERTISED_URL: "http://localhost:8088"
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: http://schema-registry:8084
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+      PORT: 9021
+
+  schema-registry:
+    container_name: kafka-schema-registry-avro-serializer-schema-registry
+    image: confluentinc/cp-schema-registry:5.5.1
+    hostname: schema-registry
+    depends_on:
+      - zookeeper
+      - broker
+    ports:
+      - "8084:8084"
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://broker:9092
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8084
+      PORT: 8084
+
+#  schema-registry-ui:
+#    container_name: kafka-schema-registry-avro-serializer-schema-registry-ui
+#    image: landoop/schema-registry-ui:latest
+#    hostname: schema-registry-ui
+#    ports:
+#      - "8000:8000"
+#    environment:
+#      SCHEMAREGISTRY_URL: http://schema-registry:8084
+#      PROXY: "true"
+#      ALLOW_GLOBAL: "true"
+#      ALLOW_TRANSITIVE: "true"
+#      ALLOW_DELETION: "true"
+#    depends_on:
+#      - schema-registry
+
+#  rest-proxy:
+#    container_name: kafka-schema-registry-avro-serializer-kafka-rest-proxy
+#    image: confluentinc/cp-kafka-rest:5.5.1
+#    depends_on:
+#      - zookeeper
+#      - broker
+#      - schema-registry
+#    ports:
+#      - "8082:8082"
+#    hostname: kafka-rest-proxy
+#    environment:
+#      KAFKA_REST_HOST_NAME: kafka-rest-proxy
+#      KAFKA_REST_BOOTSTRAP_SERVERS: broker:9092
+#      KAFKA_REST_LISTENERS: http://0.0.0.0:8082/
+#      KAFKA_REST_ZOOKEEPER_CONNECT: zookeeper:2181
+#      KAFKA_REST_SCHEMA_REGISTRY_URL: http://schema-registry:8084/

@@ -1,18 +1,23 @@
+server.port: 9009
 spring:
+  application:
+    name: producer
   cloud:
     stream:
-      function.definition: process;attachment;
+      function.definition: supplier;attachment;
       bindings:
-        process-in-0:
+        supplier-out-0:
           destination: sensor-topic
           group: group-sensor-topic
-          consumer:
-            useNativeDecoding: true
-        attachment-in-0:
+          producer:
+            useNativeEncoding: true
+
+        attachment-out-0:
           destination: attachment-topic
           group: group-attachment-topic
-          consumer:
-            useNativeDecoding: true
+          producer:
+            useNativeEncoding: true
+
       kafka:
         binder:
           brokers: localhost:9094
@@ -28,28 +33,21 @@ spring:
           # https://docs.confluent.io/platform/current/installation/configuration/producer-configs.html
           # https://kafka.apache.org/documentation/#producerconfigs
 #        binder:
-#          consumerProperties:
+#          producerProperties:
 #            value:
 #              subject:
 #                name:
 #                  strategy: io.confluent.kafka.serializers.subject.RecordNameStrategy
 
         bindings:
-          process-in-0:
-            consumer:
-              topic.properties:
-                retention.ms: 604800000
+          supplier-out-0:
+            producer:
               configuration:
-                value.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+                value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
                 schema.registry.url: http://localhost:8084
-                specific.avro.reader: true
-          attachment-in-0:
-            consumer:
-              topic.properties:
-                  retention.ms: 604800000
+          attachment-out-0:
+            producer:
               configuration:
-                value.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+                value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
                 schema.registry.url: http://localhost:8084
-                specific.avro.reader: true
-
 

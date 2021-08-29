@@ -9,6 +9,7 @@
 <!--        <relativePath>../pom.xml</relativePath> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
 <!--    </parent>-->
 
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -17,25 +18,21 @@
     </parent>
 
 
-    <groupId>org.springframework.boot.sample.consumer</groupId>
-    <artifactId>schema-registry-confluent-avro-serializer-consumer</artifactId>
+    <groupId>org.springframework.boot.sample.producer.dependent</groupId>
+    <artifactId>schema-registry-confluent-avro-serializer-producer-dependent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>schema-registry-confluent-avro-serializer-consumer</name>
-    <description>Schema Registry Consumer</description>
+    <name>schema-registry-confluent-avro-serializer-producer-dependent</name>
+    <description>Schema Registry Producer Dependent</description>
 
     <properties>
-        <java.version>11</java.version>
-        <kotlin.version>1.4.21</kotlin.version>
-        <avro.version>1.10.2</avro.version>
-        <confluent.version>6.2.0</confluent.version>
         <spring-cloud.version>2020.0.3</spring-cloud.version>
+        <schema.version>0.0.1-SNAPSHOT</schema.version>
     </properties>
 
     <modules>
         <module>application</module>
         <module>messaging</module>
-        <module>schema</module>
     </modules>
 
     <dependencyManagement>
@@ -49,6 +46,8 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+
     <build>
         <plugins>
             <plugin>
@@ -56,6 +55,14 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -67,7 +74,6 @@
             <url>https://packages.confluent.io/maven/</url>
         </repository>
     </repositories>
-
 
 
 </project>

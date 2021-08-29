@@ -1,7 +1,7 @@
 package sample.consumer
 
 import com.example.Sensor
-import com.wefox.comms.ms.crm.attachments.messaging.CommandCreateAttachments
+import com.messaging.CommandCreateEntities
 import java.util.function.Consumer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -18,8 +18,8 @@ class ConsumerConfig {
 	}
 
 	@Bean
-	fun attachment():Consumer<CommandCreateAttachments> {
-		return Consumer<CommandCreateAttachments> {
+	fun attachment():Consumer<CommandCreateEntities> {
+		return Consumer<CommandCreateEntities> {
 			logger.info("consuming event {}", it)// l get dispatched to DefaultDispatcher
 			logger.info("Consumed --> input: " + it)
 		};

@@ -6,8 +6,8 @@ COPY . .
 #ARG NEXUS_USERNAME
 #ARG NEXUS_PASSWORD
 #RUN ./mvnw --settings settings.xml package
-RUN ls
-RUN chmod +x ./mvnw && ./mvnw package
+RUN chmod +x ./mvnw
+RUN ./mvnw package
 
 # build
 FROM adoptopenjdk:11-jre-hotspot as builder
@@ -28,5 +28,5 @@ COPY --from=builder application/application/ ./
 RUN cp /opt/java/openjdk/lib/security/cacerts /application/kafka.client.truststore.jks
 
 VOLUME /tmp
-EXPOSE 9999
+EXPOSE 9009
 ENTRYPOINT ["java","-Xms256m","-Xmx512m", "org.springframework.boot.loader.JarLauncher"]
