@@ -6,8 +6,7 @@ COPY . .
 #ARG NEXUS_USERNAME
 #ARG NEXUS_PASSWORD
 #RUN ./mvnw --settings settings.xml package
-RUN chmod +x ./mvnw
-RUN ./mvnw package
+RUN chmod +x ./mvnw && ./mvnw package
 
 # build
 FROM adoptopenjdk:11-jre-hotspot as builder

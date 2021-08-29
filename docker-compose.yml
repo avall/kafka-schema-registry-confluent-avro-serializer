@@ -1,17 +1,39 @@
 version: '3.8'
 services:
 
-  nexus:
-    container_name: kafka-schema-registry-avro-serializer-nexus
-    build:
-      context: .
-      dockerfile: Dockerfile_nexus
-    #    image: sonatype/nexus3
-    ports:
-      - "8081:8081"
-    command: >
-        bash -c "/wait-for-it.sh --timeout=0 zookeeper:2181 && /wait-for-it.sh --timeout=0 broker:9092 && /wait-for-it.sh --timeout=0 control-center:9021 && /wait-for-it.sh --timeout=0 schema-registry:8084 && /opt/sonatype/start-nexus-repository-manager.sh"
-  #      bash -c "/opt/sonatype/start-nexus-repository-manager.sh"
+#  consumer:
+#    container_name: kafka-schema-registry-avro-serializer-consumer
+#    build:
+#      context: ./schema-registry-confluent-avro-serializer-consumer  #real folder NOT docker folder
+#      dockerfile: Dockerfile-compose
+#    environment:
+#      APP_KAFKA_BROKERS: http://broker:9094
+#      APP_SCHEMA_REGISTRY_URL: http://schema-registry:8084
+#    volumes:
+#      - ~/.m2:/root/.m2
+#    ports:
+#      - 9999:9999
+#    command: >
+#      bash -c "/wait-for-it.sh --timeout=0 nexus:8081 && ./mvnw package && ./mvnw -s settings.xml deploy && java -jar application/target/application.jar"
+##      bash -c "/wait-for-it.sh --timeout=0 nexus:8081 && /wait-for-it.sh --timeout=0 broker:9094 && /wait-for-it.sh --timeout=0 control-center:9021 && /wait-for-it.sh --timeout=0 schema-registry:8084 && ./mvnw package && ./mvnw -s settings.xml deploy && java -jar application/target/application.jar"
+#    restart: on-failure
+#
+#  producer:
+#    container_name: kafka-schema-registry-avro-serializer-producer
+#    build:
+#      context: ./schema-registry-confluent-avro-serializer-producer-dependent  #real folder NOT docker folder
+#      dockerfile: Dockerfile-compose
+#    volumes:
+#      - ~/.m2:/root/.m2
+#    environment:
+#      APP_KAFKA_BROKERS: http://broker:9094
+#      APP_SCHEMA_REGISTRY_URL: http://schema-registry:8084
+#    ports:
+#      - 9009:9009
+#    command: >
+#      bash -c "/wait-for-it.sh --timeout=0 consumer:9999 && ./mvnw -s settings.xml package && java -jar application/target/application.jar"
+#    restart: on-failure
+#
 
   zookeeper:
     container_name: kafka-schema-registry-avro-serializer-zookeeper
@@ -23,17 +45,6 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
       ALLOW_ANONYMOUS_LOGIN: "yes"
-
-#  zoonavigator:
-#    container_name: kafka-schema-registry-avro-serializer-zoonavigator
-#    image: elkozmon/zoonavigator:1.1.0
-#    ports:
-#      - "8010:8010"
-#    environment:
-#      HTTP_PORT: 8010
-#      AUTO_CONNECT_CONNECTION_STRING: zookeeper:2181
-#    depends_on:
-#      - zookeeper
 
   broker:
     container_name: kafka-schema-registry-avro-serializer-broker
@@ -106,6 +117,20 @@ services:
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8084
       PORT: 8084
 
+#  nexus:
+#    container_name: kafka-schema-registry-avro-serializer-nexus
+#    build:
+#      context: .
+#      dockerfile: Dockerfile_nexus
+#    volumes:
+#      - /Volumes/jandri_hd_1/docker/nexus_data:/nexus-data
+#    ports:
+#      - "8081:8081"
+#    command: >
+#      bash -c "/opt/sonatype/start-nexus-repository-manager.sh"
+##        bash -c "/wait-for-it.sh --timeout=0 zookeeper:2181 && /wait-for-it.sh --timeout=0 broker:9092 && /wait-for-it.sh --timeout=0 control-center:9021 && /wait-for-it.sh --timeout=0 schema-registry:8084 && /opt/sonatype/start-nexus-repository-manager.sh"
+
+#
 #  schema-registry-ui:
 #    container_name: kafka-schema-registry-avro-serializer-schema-registry-ui
 #    image: landoop/schema-registry-ui:latest
@@ -120,7 +145,7 @@ services:
 #      ALLOW_DELETION: "true"
 #    depends_on:
 #      - schema-registry
-
+#
 #  rest-proxy:
 #    container_name: kafka-schema-registry-avro-serializer-kafka-rest-proxy
 #    image: confluentinc/cp-kafka-rest:5.5.1
@@ -137,3 +162,15 @@ services:
 #      KAFKA_REST_LISTENERS: http://0.0.0.0:8082/
 #      KAFKA_REST_ZOOKEEPER_CONNECT: zookeeper:2181
 #      KAFKA_REST_SCHEMA_REGISTRY_URL: http://schema-registry:8084/
+##  zoonavigator:
+##    container_name: kafka-schema-registry-avro-serializer-zoonavigator
+##    image: elkozmon/zoonavigator:1.1.0
+##    ports:
+##      - "8010:8010"
+##    environment:
+##      HTTP_PORT: 8010
+##      AUTO_CONNECT_CONNECTION_STRING: zookeeper:2181
+##    depends_on:
+##      - zookeeper
+
+

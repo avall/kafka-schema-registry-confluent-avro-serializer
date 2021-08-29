@@ -20,16 +20,16 @@ spring:
 
       kafka:
         binder:
-          brokers: localhost:9094
+          brokers: ${APP_KAFKA_BROKERS:localhost:9094}
           consumer-properties:
             #            key.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
             value.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
-            schema.registry.url: http://localhost:8084
+            schema.registry.url: ${APP_SCHEMA_REGISTRY_URL:http://localhost:8084}
             specific.avro.reader: true
           producer-properties:
             #            key.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
             value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
-            schema.registry.url: http://localhost:8084
+            schema.registry.url: ${APP_SCHEMA_REGISTRY_URL:http://localhost:8084}
           # https://docs.confluent.io/platform/current/installation/configuration/producer-configs.html
           # https://kafka.apache.org/documentation/#producerconfigs
 #        binder:
@@ -44,10 +44,10 @@ spring:
             producer:
               configuration:
                 value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
-                schema.registry.url: http://localhost:8084
+                schema.registry.url: ${APP_SCHEMA_REGISTRY_URL:http://localhost:8084}
           attachment-out-0:
             producer:
               configuration:
                 value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
-                schema.registry.url: http://localhost:8084
+                schema.registry.url: ${APP_SCHEMA_REGISTRY_URL:http://localhost:8084}
 

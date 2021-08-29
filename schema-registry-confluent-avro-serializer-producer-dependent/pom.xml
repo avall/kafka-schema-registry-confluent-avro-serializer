@@ -70,10 +70,9 @@
 
     <repositories>
         <repository>
-            <id>confluent</id>
-            <url>https://packages.confluent.io/maven/</url>
+            <id>repo-nexus</id>
+            <url>http://nexus:8081/repository/maven-hosted/</url>
         </repository>
     </repositories>
-
 
 </project>

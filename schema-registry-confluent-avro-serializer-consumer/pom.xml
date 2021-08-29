@@ -58,6 +58,26 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
+
+
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <serverId>repo-nexus</serverId>
+                    <nexusUrl>http://nexus:8081/</nexusUrl>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -69,5 +89,10 @@
     </repositories>
 
 
-
+    <distributionManagement>
+        <repository>
+            <id>repo-nexus</id>
+            <url>http://nexus:8081/repository/maven-hosted/</url>
+        </repository>
+    </distributionManagement>
 </project>
