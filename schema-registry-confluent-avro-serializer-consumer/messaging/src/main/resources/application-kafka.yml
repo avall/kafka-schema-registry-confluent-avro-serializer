@@ -7,11 +7,13 @@ spring:
         process-in-0:
           destination: sensor-topic
           group: group-sensor-topic
+          contentType: application/*+avro
           consumer:
             useNativeDecoding: true
         attachment-in-0:
           destination: attachment-topic
           group: group-attachment-topic
+          contentType: application/*+avro
           consumer:
             useNativeDecoding: true
 

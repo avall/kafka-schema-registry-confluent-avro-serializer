@@ -9,12 +9,14 @@ spring:
         supplier-out-0:
           destination: sensor-topic
           group: group-sensor-topic
+          contentType: application/*+avro
           producer:
             useNativeEncoding: true
 
         attachment-out-0:
           destination: attachment-topic
           group: group-attachment-topic
+          contentType: application/*+avro
           producer:
             useNativeEncoding: true
 

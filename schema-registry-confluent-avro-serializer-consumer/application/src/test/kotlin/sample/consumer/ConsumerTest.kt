@@ -22,7 +22,6 @@ import org.mockito.kotlin.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.kafka.test.EmbeddedKafkaBroker
 import org.springframework.kafka.test.context.EmbeddedKafka
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
@@ -57,7 +56,6 @@ import java.util.function.Consumer
         "logging.level.org.springframework.cloud=debug",
         "logging.level.org.springframework.integration=debug",
         "logging.level.kafka=warn",
-
     ]
 )
 @EmbeddedKafka(
@@ -71,7 +69,6 @@ class ConsumerTest {
     private var avroSerializer: KafkaAvroSerializer? = null
     private var deserializer: KafkaAvroDeserializer? = null
     private var schema:Schema? = null
-    @Autowired lateinit var embeddedKafkaBroker: EmbeddedKafkaBroker
     @Autowired lateinit var publisher: PublisherService
     @Captor private val commandCreateEntitiesCaptor: ArgumentCaptor<ByteArray>?=null
 
@@ -102,8 +99,6 @@ class ConsumerTest {
         schemaRegistry.register("attachment-topic-value", AvroSchema(avroRecord.getSchema()))
         val avroSerialized = avroSerializer!!.serialize("attachment-topic", avroRecord)
 
-//        KafkaAvroSerializer
-
         //When
         publisher.send(avroSerialized, "attachment"+"-in-0", "pplication/*+avro")
 
@@ -118,13 +113,13 @@ class ConsumerTest {
                 assertAll(
                     {
                         assertEquals(
-                            event.items.get(0).name, record.get(0).toString() ,
+                            event.items.get(0).name, record.get("name").toString() ,
                             "name"
                         )
                     },
                     {
                         assertEquals(
-                            event.items.get(0).description, record.get(1).toString(),
+                            event.items.get(0).description, record.get("description").toString(),
                             "description"
                         )
                     })
