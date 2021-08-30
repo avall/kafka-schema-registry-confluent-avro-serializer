@@ -45,6 +45,7 @@
               <goal>idl-protocol</goal>
             </goals>
             <configuration>
+              <stringType>String</stringType>
               <sourceDirectory>src/main/resources/avro</sourceDirectory>
             </configuration>
           </execution>

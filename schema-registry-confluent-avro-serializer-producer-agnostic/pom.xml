@@ -2,21 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-<!--    <parent>-->
-<!--        <groupId>io.spring.cloud.stream.sample</groupId>-->
-<!--        <artifactId>schema-registry-confluent-avro-serializer</artifactId>-->
-<!--        <version>0.0.1-SNAPSHOT</version>-->
-<!--        <relativePath>../pom.xml</relativePath> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
-<!--    </parent>-->
-
-
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.4.4</version>
-<!--        <relativePath>../pom.xml</relativePath> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
     </parent>
-
 
     <groupId>org.springframework.boot.sample.producer.agnostic</groupId>
     <artifactId>schema-registry-confluent-avro-serializer-producer-agnostic</artifactId>

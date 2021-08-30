@@ -1,7 +1,7 @@
 package sample.producer;
 
-import com.example.Sensor;
-import com.messaging.CommandCreateEntities;
+import com.sample.Sensor;
+import com.sample.CommandCreateEntities;
 import java.util.concurrent.BlockingQueue;
 import java.util.function.Supplier;
 import org.springframework.context.annotation.Bean;

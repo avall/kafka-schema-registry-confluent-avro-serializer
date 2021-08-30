@@ -1,8 +1,8 @@
 package sample.producer;
 
-import com.example.Sensor;
-import com.messaging.CommandCreateEntity;
-import com.messaging.CommandCreateEntities;
+import com.sample.Sensor;
+import com.sample.CommandCreateEntity;
+import com.sample.CommandCreateEntities;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.UUID;

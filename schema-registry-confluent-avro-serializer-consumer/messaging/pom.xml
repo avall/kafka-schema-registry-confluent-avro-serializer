@@ -21,7 +21,7 @@
 
     <dependency>
       <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-stream-binder-kafka</artifactId>
+      <artifactId>spring-cloud-starter-stream-kafka</artifactId>
     </dependency>
     <dependency>
       <groupId>io.confluent</groupId>
@@ -41,6 +41,7 @@
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-kotlin</artifactId>
     </dependency>
+
 
   </dependencies>
 

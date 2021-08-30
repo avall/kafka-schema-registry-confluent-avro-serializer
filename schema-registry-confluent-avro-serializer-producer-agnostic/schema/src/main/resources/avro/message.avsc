@@ -1,7 +1,7 @@
 {
   "type": "record",
   "name": "CommandCreateEntities",
-  "namespace": "com.messaging",
+  "namespace": "com.sample",
   "fields": [
     {
       "name": "items",
@@ -9,7 +9,7 @@
         "type": "array",
         "items": {
           "type": "record",
-          "namespace": "com.messaging",
+          "namespace": "com.sample",
           "name": "CommandCreateEntity",
           "fields": [
             {

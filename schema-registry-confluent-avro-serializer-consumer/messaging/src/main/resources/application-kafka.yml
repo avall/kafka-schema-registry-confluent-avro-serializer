@@ -1,6 +1,7 @@
 spring:
   cloud:
     stream:
+      default-binder: kafka
       function.definition: process;attachment;
       bindings:
         process-in-0:
