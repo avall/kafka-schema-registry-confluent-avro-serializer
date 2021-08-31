@@ -22,7 +22,11 @@ import org.mockito.kotlin.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.core.io.ClassPathResource
 import org.springframework.kafka.test.context.EmbeddedKafka
+import java.io.IOException
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
@@ -95,7 +99,7 @@ class ConsumerTest {
             ).build();
 
         val avroRecord: IndexedRecord = event
-        schema = avroRecord.getSchema()
+        schema = createSchema()
         schemaRegistry.register("attachment-topic-value", AvroSchema(avroRecord.getSchema()))
         val avroSerialized = avroSerializer!!.serialize("attachment-topic", avroRecord)
 
@@ -153,5 +157,17 @@ class ConsumerTest {
         avroSerializer!!.configure(configs1, false)
     }
 
+    private  fun createSchema(): Schema? {
+        val schema = loadPayload("/avro/message.avsc")
+        return Schema.Parser().parse(schema)
+    }
+
+    @Throws(IOException::class)
+    private fun loadPayload(name: String): String? {
+        return String(
+            Files.readAllBytes(ClassPathResource("$name", javaClass).file.toPath()),
+            StandardCharsets.UTF_8
+        )
+    }
 
 }
