@@ -1,0 +1,29 @@
+{
+  "type": "record",
+  "name": "CommandCreateEntities",
+  "namespace": "com.sample",
+  "fields": [
+    {
+      "name": "items",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "namespace": "com.sample",
+          "name": "CommandCreateEntity",
+          "fields": [
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "description",
+              "type": ["null","string"],
+              "default": null
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
