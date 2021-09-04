@@ -1,39 +1,39 @@
 version: '3.8'
 services:
 
-#  consumer:
-#    container_name: kafka-schema-registry-avro-serializer-consumer
-#    build:
-#      context: ./schema-registry-confluent-avro-serializer-consumer  #real folder NOT docker folder
-#      dockerfile: Dockerfile-compose
-#    environment:
-#      APP_KAFKA_BROKERS: http://broker:9094
-#      APP_SCHEMA_REGISTRY_URL: http://schema-registry:8084
-#    volumes:
-#      - ~/.m2:/root/.m2
-#    ports:
-#      - 9999:9999
-#    command: >
-#      bash -c "/wait-for-it.sh --timeout=0 nexus:8081 && ./mvnw package && ./mvnw -s settings.xml deploy && java -jar application/target/application.jar"
-##      bash -c "/wait-for-it.sh --timeout=0 nexus:8081 && /wait-for-it.sh --timeout=0 broker:9094 && /wait-for-it.sh --timeout=0 control-center:9021 && /wait-for-it.sh --timeout=0 schema-registry:8084 && ./mvnw package && ./mvnw -s settings.xml deploy && java -jar application/target/application.jar"
-#    restart: on-failure
-#
-#  producer:
-#    container_name: kafka-schema-registry-avro-serializer-producer
-#    build:
-#      context: ./schema-registry-confluent-avro-serializer-producer-dependent  #real folder NOT docker folder
-#      dockerfile: Dockerfile-compose
-#    volumes:
-#      - ~/.m2:/root/.m2
-#    environment:
-#      APP_KAFKA_BROKERS: http://broker:9094
-#      APP_SCHEMA_REGISTRY_URL: http://schema-registry:8084
-#    ports:
-#      - 9009:9009
-#    command: >
-#      bash -c "/wait-for-it.sh --timeout=0 consumer:9999 && ./mvnw -s settings.xml package && java -jar application/target/application.jar"
-#    restart: on-failure
-#
+  consumer:
+    container_name: kafka-schema-registry-avro-serializer-consumer
+    build:
+      context: schema-registry-confluent-avro-serializer-consumer  #real folder NOT docker folder
+      dockerfile: ./Dockerfile-compose
+    environment:
+      APP_KAFKA_BROKERS: http://broker:9092
+      APP_SCHEMA_REGISTRY_URL: http://schema-registry:8084
+    volumes:
+      - ~/.m2:/root/.m2
+    ports:
+      - 9999:9999
+    command: >
+      bash -c "./wait-for-it.sh --timeout=0 schema-registry:8084 && ./wait-for-it.sh --timeout=0 control-center:9021 && ./wait-for-it.sh --timeout=0 broker:9092 && ./mvnw package -DskipTests && java -jar application/target/application.jar"
+#      bash -c "./wait-for-it.sh --timeout=0 schema-registry:8084 && ./wait-for-it.sh --timeout=0 control-center:9021 && ./wait-for-it.sh --timeout=0 broker:9092 && ./mvnw package -DskipTests && ./mvnw -s settings.xml deploy -DskipTests && java -jar application/target/application.jar"
+    restart: on-failure
+
+  producer:
+    container_name: kafka-schema-registry-avro-serializer-producer
+    build:
+      context: schema-registry-confluent-avro-serializer-producer-agnostic  #real folder NOT docker folder
+      dockerfile: ./Dockerfile-compose
+    volumes:
+      - ~/.m2:/root/.m2
+    environment:
+      APP_KAFKA_BROKERS: http://broker:9092
+      APP_SCHEMA_REGISTRY_URL: http://schema-registry:8084
+    ports:
+      - 9009:9009
+    command: >
+      bash -c "./wait-for-it.sh --timeout=0 consumer:9999 && ./mvnw package -DskipTests && java -jar application/target/application.jar"
+    restart: on-failure
+
 
   zookeeper:
     container_name: kafka-schema-registry-avro-serializer-zookeeper
@@ -103,7 +103,10 @@ services:
 
   schema-registry:
     container_name: kafka-schema-registry-avro-serializer-schema-registry
-    image: confluentinc/cp-schema-registry:5.5.1
+#    image: confluentinc/cp-schema-registry:5.5.1
+    build:
+      context: .
+      dockerfile: Dockerfile_schema_registry
     hostname: schema-registry
     depends_on:
       - zookeeper
@@ -116,6 +119,8 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8084
       PORT: 8084
+    command: >
+      bash -c "./wait-for-it.sh --timeout=0 zookeeper:2181 && ./wait-for-it.sh --timeout=0 broker:9092 && /etc/confluent/docker/run"
 
 #  nexus:
 #    container_name: kafka-schema-registry-avro-serializer-nexus
