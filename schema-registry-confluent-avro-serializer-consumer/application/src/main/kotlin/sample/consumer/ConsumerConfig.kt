@@ -20,10 +20,10 @@ class ConsumerConfig {
 	@Bean
 	fun attachment():Consumer<CommandCreateEntities> {
 		return Consumer<CommandCreateEntities> {
+//			test DLQ's
+//			throw Exception("pp")
 			logger.info("consuming event {}", it)// l get dispatched to DefaultDispatcher
 			logger.info("Consumed --> input: " + it)
 		};
 	}
-
-
 }

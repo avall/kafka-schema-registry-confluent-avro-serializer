@@ -9,15 +9,37 @@ spring:
           group: group-sensor-topic
           contentType: application/*+avro
           consumer:
+            maxAttempts: 3
             useNativeDecoding: true
+            concurrency: 6
         attachment-in-0:
           destination: attachment-topic
           group: group-attachment-topic
           contentType: application/*+avro
           consumer:
+            maxAttempts: 3
             useNativeDecoding: true
+            concurrency: 6
 
       kafka:
+        bindings:
+          process-in-0:
+            consumer:
+              enable-dlq: true
+              dlq-name: sensor-topic.dlq
+              topic.properties:
+                retention.ms: 604800000
+          attachment-in-0:
+            consumer:
+              enable-dlq: true
+              dlq-name: attachment-topic.dlq
+#              dlq-partitions: 1
+#              dlq-producer-properties:
+#                configuration:
+#                  value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+#                  schema.registry.url: ${APP_SCHEMA_REGISTRY_URL:http://localhost:8084}
+              topic.properties:
+                  retention.ms: 604800000
         binder:
           brokers: ${APP_KAFKA_BROKERS:localhost:9094}
           consumer-properties:
@@ -25,35 +47,13 @@ spring:
             value.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
             schema.registry.url: ${APP_SCHEMA_REGISTRY_URL:http://localhost:8084}
             specific.avro.reader: true
+#            value.subject.name.strategy: io.confluent.kafka.serializers.subject.RecordNameStrategy
           producer-properties:
             #            key.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
             value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
             schema.registry.url: ${APP_SCHEMA_REGISTRY_URL:http://localhost:8084}
           # https://docs.confluent.io/platform/current/installation/configuration/producer-configs.html
           # https://kafka.apache.org/documentation/#producerconfigs
-#        binder:
-#          consumerProperties:
-#            value:
-#              subject:
-#                name:
-#                  strategy: io.confluent.kafka.serializers.subject.RecordNameStrategy
 
-        bindings:
-          process-in-0:
-            consumer:
-              topic.properties:
-                retention.ms: 604800000
-              configuration:
-                value.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
-                schema.registry.url: ${APP_SCHEMA_REGISTRY_URL:http://localhost:8084}
-                specific.avro.reader: true
-          attachment-in-0:
-            consumer:
-              topic.properties:
-                  retention.ms: 604800000
-              configuration:
-                value.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
-                schema.registry.url: ${APP_SCHEMA_REGISTRY_URL:http://localhost:8084}
-                specific.avro.reader: true
 
 

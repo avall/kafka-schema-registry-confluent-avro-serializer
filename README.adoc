@@ -10,6 +10,14 @@ The benefit is that these components are now cross compatible with external tool
 as the out of the box tools - `kafka-avro-console-consumer` and `kafka-avro-console-producer` - that come with Confluent Schema registry.
 If your use case requires to use these external tools, then we recommend using the strategies implemented in these samples.
 
+=== Kafdrop ====
+java --add-opens=java.base/sun.nio.ch=ALL-UNNAMED \                                                                                                                                                      09:23  08.09.21    6.14G 
+    -jar /Applications/kafdrop/kafdrop-3.28.0.jar \
+    --kafka.brokerConnect=localhost:9094
+
+Good web to improve Spring Cloud Stream.
+https://dev.to/adevintaspain/spring-cloud-stream-step-by-step-11l0
+
 === Requirement
 As a developer, I'd like to design my consumer to be resilient to differing payload schemas and I want to use Confluent Schema Registry.
 
