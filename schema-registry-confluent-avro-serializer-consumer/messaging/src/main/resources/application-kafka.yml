@@ -43,13 +43,11 @@ spring:
         binder:
           brokers: ${APP_KAFKA_BROKERS:localhost:9094}
           consumer-properties:
-            #            key.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
             value.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
             schema.registry.url: ${APP_SCHEMA_REGISTRY_URL:http://localhost:8084}
             specific.avro.reader: true
 #            value.subject.name.strategy: io.confluent.kafka.serializers.subject.RecordNameStrategy
           producer-properties:
-            #            key.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
             value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
             schema.registry.url: ${APP_SCHEMA_REGISTRY_URL:http://localhost:8084}
           # https://docs.confluent.io/platform/current/installation/configuration/producer-configs.html
