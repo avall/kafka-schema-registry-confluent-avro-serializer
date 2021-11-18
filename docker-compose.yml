@@ -137,8 +137,10 @@ services:
       JVM_OPTS: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
     depends_on:
       - broker
-    command: >
-      bash -c "./wait-for-it.sh --timeout=0 broker:9092 && ./kafdrop.sh"
+#    command: >
+#      bash -c "./wait-for-it.sh --timeout=0 broker:9092 && ./kafdrop.sh"
+
+
 
 #  nexus:
 #    container_name: kafka-schema-registry-avro-serializer-nexus

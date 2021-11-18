@@ -5,3 +5,13 @@ FROM obsidiandynamics/kafdrop:3.28.0-SNAPSHOT
 
 COPY --chown=1000:1000 wait-for-it.sh wait-for-it.sh
 COPY --chown=1000:1000 wait-for-it.sh /wait-for-it.sh
+COPY docker-entrypoint.sh /
+
+RUN chmod +x wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+RUN chmod +x /docker-kafdrop-entrypoint.sh
+
+RUN pwd
+RUN ls -a
+
+ENTRYPOINT ["sh", "/docker-kafdrop-entrypoint.sh"]
